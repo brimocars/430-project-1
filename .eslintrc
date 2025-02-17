@@ -1,0 +1,9 @@
+// Borrowed from HTTP-API-Assignment-ii
+{
+  "extends": "airbnb/base",
+  "rules": {
+    "no-underscore-dangle": "off",
+    "no-plusplus": "off",
+    "import/extensions": "off"
+  }
+}
