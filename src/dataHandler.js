@@ -65,8 +65,47 @@ function getSenator(req, res) {
   res.end();
 }
 
-function addSenator(req, res) {
+function addOrModifySenator(req, res) {
+  const name = req.body?.person?.name;
   
+  const existingIndex = data.indexOf(name);
+
+  if (existingIndex === -1) {
+    // add
+    try {
+      data.push(req.body);
+      responseObject = {
+        message: `Created senator ${name}`
+      }
+      res.writeHead(204, getHeaders(responseObject));
+      res.write(JSON.stringify(responseObject));
+    } catch (err) {
+      console.log(`Error creating senator: ${err}`);
+    } finally {
+      res.end();
+    }
+  } else {
+    // modify
+    try {
+      data[existingIndex] = req.body;
+      responseObject = {
+        message: `Updated senator ${name}`
+      }
+      res.writeHead(204, getHeaders(responseObject));
+      res.write(JSON.stringify(responseObject));
+    } catch (err) {
+      console.log(`Error updating senator: ${err}`);
+    } finally {
+      res.end();
+    }
+  }
+
+
+  data.push(req.body);
+  res.writeHead(204, getHeaders(responseObject));
+  res.write(JSON.stringify(responseObject));
+  res.end();
+
 }
 
 function getAll(res) {
@@ -81,32 +120,10 @@ function getAll(res) {
 
 function senator(req, res) {
   if (req.body) {
-    addSenator(req, res);
+    addOrModifySenator(req, res);
   } else {
     getSenator(req, res);
   }
-}
-
-function addUser(req, res) {
-  const { name, age } = req.body;
-  if (!name || !age) {
-    res.writeHead(400, { 'Content-Type': 'application/json' });
-    res.write(JSON.stringify({
-      message: 'Name and age are both required',
-      id: 'addUserMissingParams',
-    }));
-  } else if (users[name]) {
-    users[name].age = age;
-    res.writeHead(204, { 'Content-Type': 'application/json' });
-    res.write('');
-  } else {
-    users[name] = req.body;
-    res.writeHead(201, { 'Content-Type': 'application/json' });
-    res.write(JSON.stringify({
-      message: 'Created Successfully',
-    }));
-  }
-  res.end();
 }
 
 module.exports = {

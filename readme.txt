@@ -27,4 +27,22 @@ It handles requests for index.html and style.css
 
 // questions for travis:
 - do we have to use html forms for the client, or can I just use buttons and inputs
+-- No, button is find
 - could my above and beyond work be data persistance? either with just using a file or with mongo
+
+
+// dataset endpoint plan
+GET all:
+  return information about all senators
+GET senator:
+  get information about each senator that matches the search term
+POST senator:
+  modify information about a senator
+GET state:
+  get information about the senators for a state
+POST state:
+  update the senators for a state
+GET party:
+  get senators belonging to a specified party
+GET contact:
+  get just the contact information for the specified senator

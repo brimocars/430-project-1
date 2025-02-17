@@ -59,8 +59,6 @@ const onRequest = async (req, res) => {
       // get
       dataHandler.getAll(res);
       break;
-    // Ideally, the following 4 endpoints would be combined into 1 endpoint (/senator) with a whole bunch of query params for
-    // searching by or updating various fields. However, this assignment has a minimum endpoint requirement.
     case '/senator':
       // get and post
       req.body = await parseBody(req);
@@ -71,12 +69,10 @@ const onRequest = async (req, res) => {
       req.body = await parseBody(req);
       break;
     case '/party':
-      // get and post
-      req.body = await parseBody(req);
+      // get
       break;
     case '/contact':
-      // get and post
-      req.body = await parseBody(req);
+      // get
       break;
     default:
       res.writeHead(404, { 'Content-Type': 'application/json' });
