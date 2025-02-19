@@ -46,7 +46,7 @@ const onRequest = async (req, res) => {
   console.log(req.url);
   console.log(req.method);
   const [baseUrl, query] = req.url.split('?');
-  req.query = parseQuery(query);
+  req.query = parseQuery(query) ?? {};
 
   switch (baseUrl) {
     case '/':

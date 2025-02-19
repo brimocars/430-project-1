@@ -32,8 +32,6 @@ It handles requests for index.html and style.css
 
 
 // dataset endpoint plan
-GET all:
-  return information about all senators
 GET senator:
   get information about each senator that matches the search term
 POST senator:
@@ -46,3 +44,6 @@ GET party:
   get senators belonging to a specified party
 GET contact:
   get just the contact information for the specified senator
+GET congress numbers
+  get congres numbers for a senator
+POST gender?
