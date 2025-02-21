@@ -99,6 +99,22 @@ const onRequest = async (req, res) => {
       // get
       dataHandler.contact(req, res);
       break;
+    case '/gender':
+      // post
+      try {
+        req.body = await parseBody(req);
+      } catch (err) {
+        console.log(err);
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify({
+          id: 'badRequest',
+          message: 'Error parsing json',
+        }));
+        res.end();
+        return;
+      }
+      dataHandler.gender(req, res);
+      break;
     default:
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.write(JSON.stringify({

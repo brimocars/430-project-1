@@ -91,18 +91,18 @@
             console.log(json);
             message.innerHTML = `Message: ${json.message}`;
           }
-        } else { 
+        } else {
           if (method === 'HEAD') {
             title.innerHTML = 'Success';
             message.innerHTML = '';
-          } else { 
+          } else {
             const json = await res.json();
             console.log(json);
             title.innerHTML = 'Success';
             message.innerHTML = `${JSON.stringify(json)}`;
           }
         }
-        
+
         return false; // because forms are silly
       });
     }
@@ -110,6 +110,48 @@
 </head>
 
 <body>
+  <h1>Senators</h1>
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/senator</span>
+      <span class="method">GET</span>
+      <span class="method">HEAD</span>
+    </h2>
+
+    <div class="content">
+      <div class="params">
+        <div class="param">
+          <label for="get-senator-firstName">first name</label>
+          <input id="get-senator-firstName" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-senator-firstName">first name</label>
+          <input id="get-senator-firstName" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-senator-firstName">first name</label>
+          <input id="get-senator-firstName" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-senator-firstName">first name</label>
+          <input id="get-senator-firstName" type="text" />
+        </div>
+      </div>
+
+      <div class="method-selector">
+        <div class="method">
+          <label for="GET">GET</label>
+          <input type="radio" id="GET" name="method" value="GET" checked />
+        </div>
+        <div class="method">
+          <label for="GET">GET</label>
+          <input type="radio" id="HEAD" name="method" value="HEAD" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <section id="top">
     <h3>POST Status Code Tests</h3>
     <form id="nameForm" action="/addUser" method="post">
