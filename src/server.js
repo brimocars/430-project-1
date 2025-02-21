@@ -23,8 +23,12 @@ const parseBody = (request) => {
     });
 
     request.on('end', () => {
-      const bodyString = Buffer.concat(body).toString();
-      resolve(JSON.parse(bodyString));
+      try {
+        const bodyString = Buffer.concat(body).toString();
+        resolve(JSON.parse(bodyString));
+      } catch (err) {
+        reject(err)
+      }
     });
   });
 };
@@ -55,24 +59,45 @@ const onRequest = async (req, res) => {
     case '/style.css':
       clientHandler.getStyle(req, res);
       break;
-    case '/all':
-      // get
-      dataHandler.getAll(res);
-      break;
     case '/senator':
       // get and post
-      req.body = await parseBody(req);
+      try {
+        req.body = await parseBody(req);
+      } catch (err) {
+        console.log(err);
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify({
+          id: 'badRequest',
+          message: 'Error parsing json',
+        }));
+        res.end();
+        return;
+      }
       dataHandler.senator(req, res)
       break;
     case '/state':
       // get and post
-      req.body = await parseBody(req);
+      try {
+        req.body = await parseBody(req);
+      } catch (err) {
+        console.log(err);
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.write(JSON.stringify({
+          id: 'badRequest',
+          message: 'Error parsing json',
+        }));
+        res.end();
+        return;
+      }
+      dataHandler.state(req, res);
       break;
     case '/party':
       // get
+      dataHandler.party(req, res);
       break;
     case '/contact':
       // get
+      dataHandler.contact(req, res);
       break;
     default:
       res.writeHead(404, { 'Content-Type': 'application/json' });
