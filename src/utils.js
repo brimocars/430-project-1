@@ -7,4 +7,4 @@ function equalsIgnoreCase(string1, string2) {
 
 module.exports = {
   equalsIgnoreCase,
-}
+};

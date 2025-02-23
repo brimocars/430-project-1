@@ -27,7 +27,7 @@ const parseBody = (request) => {
         const bodyString = Buffer.concat(body).toString();
         resolve(JSON.parse(bodyString));
       } catch (err) {
-        reject(err)
+        reject(err);
       }
     });
   });
@@ -42,7 +42,7 @@ const parseQuery = (query) => {
   kvPairs.forEach((kvPair) => {
     const [key, value] = kvPair.split('=');
     queryObject[key] = value;
-  })
+  });
   return queryObject;
 };
 
@@ -73,7 +73,7 @@ const onRequest = async (req, res) => {
         res.end();
         return;
       }
-      dataHandler.senator(req, res)
+      dataHandler.senatorEndpoint(req, res);
       break;
     case '/state':
       // get and post
@@ -89,15 +89,15 @@ const onRequest = async (req, res) => {
         res.end();
         return;
       }
-      dataHandler.state(req, res);
+      dataHandler.stateEndpoint(req, res);
       break;
     case '/party':
       // get
-      dataHandler.party(req, res);
+      dataHandler.partyEndpoint(req, res);
       break;
     case '/contact':
       // get
-      dataHandler.contact(req, res);
+      dataHandler.contactEndpoint(req, res);
       break;
     case '/gender':
       // post
@@ -113,7 +113,7 @@ const onRequest = async (req, res) => {
         res.end();
         return;
       }
-      dataHandler.gender(req, res);
+      dataHandler.genderEndpoint(req, res);
       break;
     default:
       res.writeHead(404, { 'Content-Type': 'application/json' });
