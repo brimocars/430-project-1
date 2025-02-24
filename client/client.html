@@ -18,7 +18,8 @@
       const senatorButton = document.querySelector('#get-senator');
       const byStateButton = document.querySelector('#get-by-state');
       const byPartyButton = document.querySelector('#get-by-party');
-      const byContactButton = document.querySelector('#get-by-contact');
+      const contactButton = document.querySelector('#get-contact');
+      const postSenatorButton = document.querySelector('#post-senator');
 
       const pres = document.querySelectorAll('pre');
       const buttons = document.querySelectorAll('button');
@@ -55,6 +56,116 @@
         const response = document.querySelector('#get-senator-response');
         response.innerHTML = responseString;
       })
+      byStateButton.addEventListener('click', async (e) => {
+        const state = document.querySelector('#get-by-state-state').value;
+        const method = document.querySelector('input[name="method-by-state"]:checked').value;
+
+        const url = `/state?state=${state}`;
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD') {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+          responseString += `<br>Data: ${JSON.stringify(json.data)}`;
+        }
+        const response = document.querySelector('#get-by-state-response');
+        response.innerHTML = responseString;
+      })
+      byPartyButton.addEventListener('click', async (e) => {
+        const party = document.querySelector('#get-by-party-party').value;
+        const method = document.querySelector('input[name="method-by-party"]:checked').value;
+
+        const url = `/party?party=${party}`;
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD') {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+          responseString += `<br>Data: ${JSON.stringify(json.data)}`;
+        }
+        const response = document.querySelector('#get-by-party-response');
+        response.innerHTML = responseString;
+      })
+      contactButton.addEventListener('click', async (e) => {
+        const firstName = document.querySelector('#get-contact-firstName').value;
+        const lastName = document.querySelector('#get-contact-lastName').value;
+        const party = document.querySelector('#get-contact-party').value;
+        const state = document.querySelector('#get-contact-state').value;
+        const method = document.querySelector('input[name="method-contact"]:checked').value;
+
+        const url = `/contact?firstName=${firstName}&lastName=${lastName}&party=${party}&state=${state}`;
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD') {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+          responseString += `<br>Data: ${JSON.stringify(json.data)}`;
+        }
+        const response = document.querySelector('#get-contact-response');
+        response.innerHTML = responseString;
+      })
+      
+      postSenatorButton.addEventListener('click', async (e) => {
+        const firstName = document.querySelector('#post-senator-firstName').value;
+        const lastName = document.querySelector('#post-senator-lastName').value;
+        const name = document.querySelector('#post-senator-name').value;
+        const party = document.querySelector('#post-senator-party').value;
+        const state = document.querySelector('#post-senator-state').value;
+        const congressNumbers = document.querySelector('#post-senator-congress-numbers').value;
+        const method = document.querySelector('input[name="method-senator"]:checked').value;
+        const congress_numbers = congressNumbers.split(',');
+
+        const url = `/senator`;
+        const body = {
+          person: {
+            firstname: firstName,
+            lastname: lastName,
+          },
+          state,
+          party,
+          congress_numbers,
+        }
+        if (name) body.person.name = name;
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD') {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+        }
+        const response = document.querySelector('#post-senator-response');
+        response.innerHTML = responseString;
+      })
+      
     }
   </script>
 </head>
@@ -126,11 +237,11 @@
       <div class="method-selector">
         <span class="method">
           <label for="GET-by-state">GET</label>
-          <input type="radio" id="GET-by-state" name="method-by-state" value="GET-by-state" checked />
+          <input type="radio" id="GET-by-state" name="method-by-state" value="GET" checked />
         </span>
         <span class="method">
           <label for="HEAD-by-state">HEAD</label>
-          <input type="radio" id="HEAD-by-state" name="method-by-state" value="HEAD-by-state" />
+          <input type="radio" id="HEAD-by-state" name="method-by-state" value="HEAD" />
         </span>
       </div>
 
@@ -161,11 +272,11 @@
       <div class="method-selector">
         <span class="method">
           <label for="GET-by-party">GET</label>
-          <input type="radio" id="GET-by-party" name="method-by-party" value="GET-by-party" checked />
+          <input type="radio" id="GET-by-party" name="method-by-party" value="GET" checked />
         </span>
         <span class="method">
           <label for="HEAD-by-party">HEAD</label>
-          <input type="radio" id="HEAD-by-party" name="method-by-party" value="HEAD-by-party" />
+          <input type="radio" id="HEAD-by-party" name="method-by-party" value="HEAD" />
         </span>
       </div>
 
@@ -208,11 +319,11 @@
       <div class="method-selector">
         <span class="method">
           <label for="GET-contact">GET</label>
-          <input type="radio" id="GET-contact" name="method-contact" value="GET-contact" checked />
+          <input type="radio" id="GET-contact" name="method-contact" value="GET" checked />
         </span>
         <span class="method">
           <label for="HEAD-contact">HEAD</label>
-          <input type="radio" id="HEAD-contact" name="method-contact" value="HEAD-contact" />
+          <input type="radio" id="HEAD-contact" name="method-contact" value="HEAD" />
         </span>
       </div>
 
@@ -224,6 +335,57 @@
       </div>
     </div>
   </div>
+
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/senator</span>
+      <span class="method-descriptor">POST</span>
+    </h2>
+
+    <div class="content">
+      <div class="params">
+        <div class="param">
+          <label for="post-senator-firstName">first name</label>
+          <input id="post-senator-firstName" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-senator-lastName">last name</label>
+          <input id="post-senator-lastName" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-senator-name">name (optional)</label>
+          <input id="post-senator-name" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-senator-party">party</label>
+          <input id="post-senator-party" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-senator-state">state</label>
+          <input id="post-senator-state" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-senator-congress-numbers">congress numbers</label>
+          <input id="post-senator-congress-numbers" type="text" />
+        </div>
+      </div>
+
+      <div class="method-selector">
+        <span class="method">
+          <label for="POST-senator">POST</label>
+          <input type="radio" id="POST-senator" name="method-senator" value="POST" checked />
+        </span>
+      </div>
+
+      <button id="post-senator">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="post-senator-response"></pre>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>

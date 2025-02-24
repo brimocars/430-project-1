@@ -105,7 +105,7 @@ function maybeSetName(senator) {
 }
 
 function addOrModifySenator(req, res) {
-  const name = maybeSetName(req);
+  const name = maybeSetName(req.body);
 
   const existingIndex = data.findIndex((s) => s.person.name === name);
 
