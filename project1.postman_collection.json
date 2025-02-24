@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9909c1bb-4904-4ace-823d-96d37363d38d",
+		"_postman_id": "7c2b47d4-5eb7-4ad1-8323-6012bd3be616",
 		"name": "project1",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "41580859"
+		"_exporter_id": "42412475"
 	},
 	"item": [
 		{
@@ -157,7 +157,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"person\": {\r\n            //\"name\": \"A fake senator that definitely doesn't exist\",\r\n            \"firstname\": \"1\",\r\n            \"lastname\": \"2\"\r\n        },\r\n        \"state\": \"MD\",\r\n        \"party\": \"some very real party\",\r\n        \"congress_numbers\": [\r\n            1,\r\n            2,\r\n            3\r\n        ]\r\n    },\r\n        {\r\n        \"person\": {\r\n            //\"name\": \"A fake senator that definitely doesn't exist\",\r\n            \"firstname\": \"1\",\r\n            \"lastname\": \"2\"\r\n        },\r\n        \"state\": \"Md\",\r\n        \"party\": \"some very real party\",\r\n        \"congress_numbers\": [\r\n            1,\r\n            2,\r\n            3\r\n        ]\r\n    }\r\n]",
+					"raw": "[\r\n    {\r\n        \"person\": {\r\n            //\"name\": \"A fake senator that definitely doesn't exist\",\r\n            \"firstname\": \"1\",\r\n            \"lastname\": \"2\"\r\n        },\r\n        \"state\": \"MD\",\r\n        \"party\": \"some very real party\",\r\n        \"congress_numbers\": [\r\n            1,\r\n            2,\r\n            3\r\n        ]\r\n    },\r\n    {\r\n        \"person\": {\r\n            //\"name\": \"A fake senator that definitely doesn't exist\",\r\n            \"firstname\": \"1\",\r\n            \"lastname\": \"2\"\r\n        },\r\n        \"state\": \"Md\",\r\n        \"party\": \"some very real party\",\r\n        \"congress_numbers\": [\r\n            1,\r\n            2,\r\n            3\r\n        ]\r\n    }\r\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -217,42 +217,6 @@
 			"response": []
 		},
 		{
-			"name": "Update gender form encoded",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "\"Sen. John Thune [R-SD]\"",
-							"type": "text"
-						},
-						{
-							"key": "gender",
-							"value": "\"woman\"",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "127.0.0.1:3000/gender",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "3000",
-					"path": [
-						"gender"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get senators by state",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -293,21 +257,9 @@
 		},
 		{
 			"name": "Head senators by state",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "HEAD",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"person\": {\r\n        //\"name\": \"A fake senator that definitely doesn't exist\",\r\n        \"firstname\": \"1\",\r\n        \"lastname\": \"2\"\r\n    },\r\n    \"state\": \"QQ\",\r\n    \"party\": \"some very real party\",\r\n    \"congress_numbers\": [1, 2, 3]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "127.0.0.1:3000/state?state=mD",
 					"host": [
@@ -332,21 +284,9 @@
 		},
 		{
 			"name": "Get senators by Party",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"person\": {\r\n        //\"name\": \"A fake senator that definitely doesn't exist\",\r\n        \"firstname\": \"1\",\r\n        \"lastname\": \"2\"\r\n    },\r\n    \"state\": \"QQ\",\r\n    \"party\": \"some very real party\",\r\n    \"congress_numbers\": [1, 2, 3]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "127.0.0.1:3000/party?party=independent",
 					"host": [
@@ -371,21 +311,9 @@
 		},
 		{
 			"name": "Head senators by Party",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "HEAD",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"person\": {\r\n        //\"name\": \"A fake senator that definitely doesn't exist\",\r\n        \"firstname\": \"1\",\r\n        \"lastname\": \"2\"\r\n    },\r\n    \"state\": \"QQ\",\r\n    \"party\": \"some very real party\",\r\n    \"congress_numbers\": [1, 2, 3]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "127.0.0.1:3000/party?party=independent",
 					"host": [
@@ -410,23 +338,11 @@
 		},
 		{
 			"name": "Get senator contact info",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"person\": {\r\n        //\"name\": \"A fake senator that definitely doesn't exist\",\r\n        \"firstname\": \"1\",\r\n        \"lastname\": \"2\"\r\n    },\r\n    \"state\": \"QQ\",\r\n    \"party\": \"some very real party\",\r\n    \"congress_numbers\": [1, 2, 3]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "127.0.0.1:3000/contact",
+					"raw": "127.0.0.1:3000/contact?state=wa",
 					"host": [
 						"127",
 						"0",
@@ -455,8 +371,7 @@
 						},
 						{
 							"key": "state",
-							"value": "wa",
-							"disabled": true
+							"value": "wa"
 						}
 					]
 				}
