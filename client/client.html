@@ -2,109 +2,59 @@
 <html lang="en">
 
 <head>
-  <title>Our simple HTTP server</title>
+  <title>Senators API for project 1</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
 
   <script>
-    function formatTitle(message) {
-      if (!message?.length) {
-        return undefined;
-      }
-      let formattedMessage = message.charAt(0).toUpperCase();
-      message = message.slice(1);
-      for (let i = 0; i < message.length; i++) {
-        if (message.charAt(i) === message.charAt(i).toUpperCase()) {
-          formattedMessage += ' ';
-        }
-        formattedMessage += message.charAt(i);
-      }
-      return formattedMessage;
-    }
-
     window.onload = () => {
-      const nameForm = document.querySelector('#nameForm');
-      nameForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(nameForm);
-        const actualBody = {};
-
-        for (const [key, value] of formData.entries()) {
-          actualBody[key] = value;
-        }
-
-
-        const res = await fetch('/addUser', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json'
-          },
-          body: JSON.stringify(actualBody),
+      const h2s = document.querySelectorAll('h2');
+      h2s.forEach((h2) => {
+        h2.addEventListener('click', (e) => {
+          const content = h2.nextElementSibling;
+          content.classList.toggle('hidden');
         })
-        const title = document.querySelector('#title');
-        const message = document.querySelector('#message');
-        if (res.status === 201) {
-          const json = await res.json();
-          console.log(json);
-          title.innerHTML = 'Created';
-          message.innerHTML = `Message: ${json.message}`;
-        } else if (res.status === 204) {
-          title.innerHTML = 'Updated (No Content)';
-          message.innerHTML = '';
-        } else {
-          const json = await res.json();
-          console.log(json);
-          title.innerHTML = 'Bad Request';
-          message.innerHTML = `Message: ${json.message}`;
-        }
-        return false; // because forms are silly
-      });
+      })
 
+      const senatorButton = document.querySelector('#get-senator');
+      const byStateButton = document.querySelector('#get-by-state');
+      const byPartyButton = document.querySelector('#get-by-party');
+      const byContactButton = document.querySelector('#get-by-contact');
 
+      const pres = document.querySelectorAll('pre');
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+          pres.forEach((pre) => {
+            pre.innerHTML = '';
+          })
+        })
+      })
 
+      senatorButton.addEventListener('click', async (e) => {
+        const firstName = document.querySelector('#get-senator-firstName').value;
+        const lastName = document.querySelector('#get-senator-lastName').value;
+        const party = document.querySelector('#get-senator-party').value;
+        const state = document.querySelector('#get-senator-state').value;
+        const method = document.querySelector('input[name="method-senator"]:checked').value;
 
+        const url = `/senator?firstName=${firstName}&lastName=${lastName}&party=${party}&state=${state}`;
 
-
-
-      const userForm = document.querySelector('#userForm');
-      const urlSelect = document.querySelector('#urlField');
-      const methodSelect = document.querySelector('#methodSelect');
-      userForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const url = urlSelect.value;
-        const method = methodSelect.value.toUpperCase();
-
-        const res = await fetch(url, {
+        const fetchResponse = await fetch(url, {
           method: method,
           headers: {
             Accept: 'application/json'
           }
         })
-        const title = document.querySelector('#title');
-        const message = document.querySelector('#message');
-
-        if (res.status === 404) {
-          title.innerHTML = 'Not Found';
-          message.innerHTML = '';
-          if (method === 'GET') {
-            const json = await res.json();
-            console.log(json);
-            message.innerHTML = `Message: ${json.message}`;
-          }
-        } else {
-          if (method === 'HEAD') {
-            title.innerHTML = 'Success';
-            message.innerHTML = '';
-          } else {
-            const json = await res.json();
-            console.log(json);
-            title.innerHTML = 'Success';
-            message.innerHTML = `${JSON.stringify(json)}`;
-          }
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD') {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+          responseString += `<br>Data: ${JSON.stringify(json.data)}`;
         }
-
-        return false; // because forms are silly
-      });
+        const response = document.querySelector('#get-senator-response');
+        response.innerHTML = responseString;
+      })
     }
   </script>
 </head>
@@ -114,8 +64,8 @@
   <div class="endpoint">
     <h2>
       <span class="api-path">/senator</span>
-      <span class="method">GET</span>
-      <span class="method">HEAD</span>
+      <span class="method-descriptor">GET</span>
+      <span class="method-descriptor">HEAD</span>
     </h2>
 
     <div class="content">
@@ -125,58 +75,155 @@
           <input id="get-senator-firstName" type="text" />
         </div>
         <div class="param">
-          <label for="get-senator-firstName">first name</label>
-          <input id="get-senator-firstName" type="text" />
+          <label for="get-senator-lastName">last name</label>
+          <input id="get-senator-lastName" type="text" />
         </div>
         <div class="param">
-          <label for="get-senator-firstName">first name</label>
-          <input id="get-senator-firstName" type="text" />
+          <label for="get-senator-party">party</label>
+          <input id="get-senator-party" type="text" />
         </div>
         <div class="param">
-          <label for="get-senator-firstName">first name</label>
-          <input id="get-senator-firstName" type="text" />
+          <label for="get-senator-state">state</label>
+          <input id="get-senator-state" type="text" />
         </div>
       </div>
 
       <div class="method-selector">
-        <div class="method">
-          <label for="GET">GET</label>
-          <input type="radio" id="GET" name="method" value="GET" checked />
-        </div>
-        <div class="method">
-          <label for="GET">GET</label>
-          <input type="radio" id="HEAD" name="method" value="HEAD" />
-        </div>
+        <span class="method">
+          <label for="GET-senator">GET</label>
+          <input type="radio" id="GET-senator" name="method-senator" value="GET" checked />
+        </span>
+        <span class="method">
+          <label for="HEAD-senator">HEAD</label>
+          <input type="radio" id="HEAD-senator" name="method-senator" value="HEAD" />
+        </span>
+      </div>
+
+      <button id="get-senator">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="get-senator-response"></pre>
       </div>
     </div>
   </div>
 
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/state</span>
+      <span class="method-descriptor">GET</span>
+      <span class="method-descriptor">HEAD</span>
+    </h2>
 
-  <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1" />
-      <input id="nameSubmitter" type="submit" value="Add User" />
-    </form>
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
-    </form>
-  </section>
-  <section id="content">
-  </section>
-  <h2 id="title"></h2>
-  <div id="message"></div>
+    <div class="content hidden">
+      <div class="params">
+        <div class="param">
+          <label for="get-by-state-state">state</label>
+          <input id="get-by-state-state" type="text" />
+        </div>
+      </div>
+
+      <div class="method-selector">
+        <span class="method">
+          <label for="GET-by-state">GET</label>
+          <input type="radio" id="GET-by-state" name="method-by-state" value="GET-by-state" checked />
+        </span>
+        <span class="method">
+          <label for="HEAD-by-state">HEAD</label>
+          <input type="radio" id="HEAD-by-state" name="method-by-state" value="HEAD-by-state" />
+        </span>
+      </div>
+
+      <button id="get-by-state">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="get-by-state-response"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/party</span>
+      <span class="method-descriptor">GET</span>
+      <span class="method-descriptor">HEAD</span>
+    </h2>
+
+    <div class="content hidden">
+      <div class="params">
+        <div class="param">
+          <label for="get-by-party-party">party</label>
+          <input id="get-by-party-party" type="text" />
+        </div>
+      </div>
+
+      <div class="method-selector">
+        <span class="method">
+          <label for="GET-by-party">GET</label>
+          <input type="radio" id="GET-by-party" name="method-by-party" value="GET-by-party" checked />
+        </span>
+        <span class="method">
+          <label for="HEAD-by-party">HEAD</label>
+          <input type="radio" id="HEAD-by-party" name="method-by-party" value="HEAD-by-party" />
+        </span>
+      </div>
+
+      <button id="get-by-party">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="get-by-party-response"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/contact</span>
+      <span class="method-descriptor">GET</span>
+      <span class="method-descriptor">HEAD</span>
+    </h2>
+
+    <div class="content hidden">
+      <div class="params">
+        <div class="param">
+          <label for="get-contact-firstName">first name</label>
+          <input id="get-contact-firstName" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-contact-lastName">last name</label>
+          <input id="get-contact-lastName" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-contact-party">party</label>
+          <input id="get-contact-party" type="text" />
+        </div>
+        <div class="param">
+          <label for="get-contact-state">state</label>
+          <input id="get-contact-state" type="text" />
+        </div>
+      </div>
+
+      <div class="method-selector">
+        <span class="method">
+          <label for="GET-contact">GET</label>
+          <input type="radio" id="GET-contact" name="method-contact" value="GET-contact" checked />
+        </span>
+        <span class="method">
+          <label for="HEAD-contact">HEAD</label>
+          <input type="radio" id="HEAD-contact" name="method-contact" value="HEAD-contact" />
+        </span>
+      </div>
+
+      <button id="get-contact">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="get-contact-response"></pre>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

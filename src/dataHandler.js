@@ -35,6 +35,9 @@ function getResponseStringPartFromParams(firstName, lastName, party, state) {
   if (state) {
     response += `state '${state}' and `;
   }
+  if (response.length) {
+    response = ` with ${response}`;
+  }
   // remove final and
   response = response.slice(0, response.length - 5);
   return response;
@@ -221,7 +224,7 @@ function senatorEndpoint(req, res) {
     } = req.query;
     const senators = getSenator(firstName, lastName, party, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'} with ${
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
         getResponseStringPartFromParams(firstName, lastName, party, state)}`,
       data: senators,
     };
@@ -255,7 +258,7 @@ function stateEndpoint(req, res) {
     req.query = { state: req.query.state };
     const senators = getSenator(firstName, lastName, party, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'} with ${
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
         getResponseStringPartFromParams(firstName, lastName, party, state)}`,
       data: senators,
     };
@@ -286,7 +289,7 @@ function partyEndpoint(req, res) {
     req.query = { party: req.query.party };
     const senators = getSenator(firstName, lastName, party, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'} with ${
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
         getResponseStringPartFromParams(firstName, lastName, party, state)}`,
       data: senators,
     };
@@ -317,7 +320,7 @@ function contactEndpoint(req, res) {
     return contactInfo;
   });
   const responseObject = {
-    message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'} with ${
+    message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
       getResponseStringPartFromParams(firstName, lastName, party, state)}`,
     data: relevantData,
   };

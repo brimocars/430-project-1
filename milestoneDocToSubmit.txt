@@ -1,0 +1,41 @@
+The dataset I'm using is from https://www.govtrack.us/api/v2/role?current=true&role_type=senator
+It has information about current US senators.
+
+I have implemented all of the endpoints and started the front end work. I also addressed all eslint issues and made a
+postman collection with requests to test each endpoint.
+
+The work that is left is completing the frontend, writing the documentation page, and doing whatever I decide to do
+for above and beyond work. I plan on first completing the front end, then writing the documentation page, and finally
+adding any above and beyond features. I also need to work on making the post requests accept form encoded data. I think
+I succeeded in this already, but I can't figure out how to submit nested objects in form data, so I can't test most of
+my endpoints. Depending on how much time I have, I may just give up and hope it's good enough.
+
+I'm not entirely sure what I'd like to do for above and beyond work. I was thinking of either adding unit tests using
+a testing framework like jasmine or jest, or adding data retention using either a simple file or mongodb. I guess I'm
+looking for advice/suggestions for which of these to do. If I did do data retention, I would also add an endpoint to
+reset the data to the default.
+
+I used quite a bit of borrowed code:
+.eslintrc 
+From previous assignments
+It sets rules for eslint
+
+.gitignore
+From previous assignments
+It tells git what to put and not put in the repo
+
+All the boilerplate stuff in server.js (express can't come soon enough)
+from previous assignments
+It sets up the server
+
+A thing to parse the body of a request
+From the demo in class, but modified slightly to suit my needs.
+It parses the body of a request and puts it in req.body
+
+clientHandler.js
+From previous assignments
+It handles requests for index.html and style.css
+
+main.yml
+From previous assignments
+It does the github action stuff

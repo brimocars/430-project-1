@@ -3,15 +3,7 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
-}
-
-#top {
-  text-align: center;
-  margin: 0 auto;
-}
-
-#top h1 {
-  font-size: 2em;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #content {
@@ -22,9 +14,59 @@ html, body {
 
 h2 {
   text-align: center;
+  display: block;
+  cursor: pointer;
+}
+
+h2 > span {
+  cursor: pointer;
 }
 
 div {
   text-align: center;
   font-size: large;
+}
+
+.endpoint {
+  padding: 0px 25% 0px 25%;
+}
+
+.param {
+  text-align: left;
+
+}
+
+label {
+  display: inline-block;
+  width: 30%;
+}
+
+.method-descriptor {
+  font-size: medium
+}
+
+h1 {
+  text-align: center;
+}
+
+.method > label {
+  width: 10%;
+}
+
+.method {
+  margin-right: 10px;
+}
+
+.response-container {
+  text-align: left;
+  justify-content: left;
+}
+
+.response-container > * {
+  text-align: left;
+  justify-content: left;
+}
+
+.hidden {
+  display: none;
 }

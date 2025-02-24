@@ -5,7 +5,20 @@ const dataHandler = require('./dataHandler.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-const parseBody = (request) => {
+const parseQuery = (query) => {
+  if (!query || query.length === 0) {
+    return {};
+  }
+  const queryObject = {};
+  const kvPairs = query.split('&');
+  kvPairs.forEach((kvPair) => {
+    const [key, value] = kvPair.split('=');
+    queryObject[key] = value;
+  });
+  return queryObject;
+};
+
+const parseBody = (request, isJson) => {
   if (request.method?.toUpperCase() !== 'POST') {
     return undefined;
   }
@@ -25,7 +38,13 @@ const parseBody = (request) => {
     request.on('end', () => {
       try {
         const bodyString = Buffer.concat(body).toString();
-        resolve(JSON.parse(bodyString));
+        if (!isJson) {
+          const decodedQuery = decodeURIComponent(bodyString);
+          const queryObject = parseQuery(decodedQuery.replaceAll('"', ''));
+          resolve(queryObject);
+        } else {
+          resolve(JSON.parse(bodyString));
+        }
       } catch (err) {
         reject(err);
       }
@@ -33,36 +52,33 @@ const parseBody = (request) => {
   });
 };
 
-const parseQuery = (query) => {
-  if (!query || query.length === 0) {
-    return {};
-  }
-  const queryObject = {};
-  const kvPairs = query.split('&');
-  kvPairs.forEach((kvPair) => {
-    const [key, value] = kvPair.split('=');
-    queryObject[key] = value;
-  });
-  return queryObject;
-};
-
 const onRequest = async (req, res) => {
   console.log(req.url);
   console.log(req.method);
   const [baseUrl, query] = req.url.split('?');
   req.query = parseQuery(query) ?? {};
+  const isJson = req.headers['content-type'] === 'application/json';
+  if (req.method === 'POST' && !isJson && req.headers['content-type'] !== 'application/x-www-form-urlencoded') {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify({
+      id: 'badRequest',
+      message: 'Unsupported content type',
+    }));
+    res.end();
+    return;
+  }
 
   switch (baseUrl) {
     case '/':
-      clientHandler.getIndex(req, res);
+      clientHandler.getIndex(res);
       break;
     case '/style.css':
-      clientHandler.getStyle(req, res);
+      clientHandler.getStyle(res);
       break;
     case '/senator':
       // get and post
       try {
-        req.body = await parseBody(req);
+        req.body = await parseBody(req, isJson);
       } catch (err) {
         console.log(err);
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -78,7 +94,7 @@ const onRequest = async (req, res) => {
     case '/state':
       // get and post
       try {
-        req.body = await parseBody(req);
+        req.body = await parseBody(req, isJson);
       } catch (err) {
         console.log(err);
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -102,7 +118,7 @@ const onRequest = async (req, res) => {
     case '/gender':
       // post
       try {
-        req.body = await parseBody(req);
+        req.body = await parseBody(req, isJson);
       } catch (err) {
         console.log(err);
         res.writeHead(400, { 'Content-Type': 'application/json' });
