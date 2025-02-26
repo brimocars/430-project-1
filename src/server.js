@@ -72,6 +72,9 @@ const onRequest = async (req, res) => {
     case '/':
       clientHandler.getIndex(res);
       break;
+    case '/docs':
+      clientHandler.getDocs(res);
+      break;
     case '/style.css':
       clientHandler.getStyle(res);
       break;

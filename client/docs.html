@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Senators API for project 1</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+
+  <script>
+    window.onload = () => {
+      const h2s = document.querySelectorAll('h2');
+      h2s.forEach((h2) => {
+        h2.addEventListener('click', (e) => {
+          const content = h2.nextElementSibling;
+          content.classList.toggle('hidden');
+        })
+      })
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Senators API Documentation</h1>
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/senator</span>
+      <span class="method-descriptor">GET</span>
+      <span class="method-descriptor">HEAD</span>
+    </h2>
+
+    <div class="content">
+      <div class="params">
+        <h3>Query Parameters</h3>
+        <div class="param">
+          <span>firstName (optional) - A senator's first name to filter by</span>
+        </div>
+        <div class="param">
+          <span>lastName (optional) - A senator's last name to filter by</span>
+        </div>
+        <div class="param">
+          <span>party (optional) - A senator's party to filter by</span>
+        </div>
+        <div class="param">
+          <span>state (optional) - A senator's state to filter by</span>
+        </div>
+      </div>
+
+      <div class="params">
+        <h3>Returns</h3>
+          <div>A JSON object containing a message and a data object, containing an array of senators</div>
+          <div>{message: string, data: [{caucus: string, congress_numbers: [number], current: boolean, description: string, district: null, enddate: string, extra: {address: string, contact_form: string, office: string, rss_url: string}, leadership_title: string, party: string, person{bioguideid: string, birthday: string, cspanid: number, fediverse_webfinger: null, firstname: string, gender: string, gender_label: string, lastname: string, link: string, middlename: string, name: string, namemod: string, nickname: string, osid: string, pvsid: null, sortname: string, twitterid: string, youtubeid: string}, phone: string, role_type: string, role_type_label: string, senator_class: string, senator_class_label: string, senator_rank: string, senator_rank_label: string, startdate: string, state: string, title: string, title_long: string, website: string}]}</div>
+      </div>
+
+      <div class="params">
+        <h3>Example</h3>
+          <div>Request: /senator?lastName=sanders</div>
+          <div>{
+            "message": "Found 1 senator with last name 'sanders'",
+            "data": [
+                {
+                    "caucus": "Democrat",
+                    "congress_numbers": [
+                        119,
+                        120,
+                        121
+                    ],
+                    "current": true,
+                    "description": "Senior Senator for Vermont",
+                    "district": null,
+                    "enddate": "2031-01-03",
+                    "extra": {
+                        "address": "332 Dirksen Senate Office Building Washington DC 20510",
+                        "contact_form": "https://www.sanders.senate.gov/contact/",
+                        "office": "332 Dirksen Senate Office Building",
+                        "rss_url": "http://www.sanders.senate.gov/rss/"
+                    },
+                    "leadership_title": null,
+                    "party": "Independent",
+                    "person": {
+                        "bioguideid": "S000033",
+                        "birthday": "1941-09-08",
+                        "cspanid": 994,
+                        "fediverse_webfinger": null,
+                        "firstname": "Bernard",
+                        "gender": "male",
+                        "gender_label": "Male",
+                        "lastname": "Sanders",
+                        "link": "https://www.govtrack.us/congress/members/bernard_sanders/400357",
+                        "middlename": "",
+                        "name": "Sen. Bernard “Bernie” Sanders [I-VT]",
+                        "namemod": "",
+                        "nickname": "Bernie",
+                        "osid": "N00000528",
+                        "pvsid": null,
+                        "sortname": "Sanders, Bernard “Bernie” (Sen.) [I-VT]",
+                        "twitterid": "SenSanders",
+                        "youtubeid": "senatorsanders"
+                    },
+                    "phone": "202-224-5141",
+                    "role_type": "senator",
+                    "role_type_label": "Senator",
+                    "senator_class": "class1",
+                    "senator_class_label": "Class 1",
+                    "senator_rank": "senior",
+                    "senator_rank_label": "Senior",
+                    "startdate": "2025-01-03",
+                    "state": "VT",
+                    "title": "Sen.",
+                    "title_long": "Senator",
+                    "website": "https://www.sanders.senate.gov"
+                }
+            ]
+        }</div>
+      </div>
+    </div>
+  </div>
+  <div class="link">
+    <a href="/">Main page</a>
+  </div>
+</body>
+
+</html>

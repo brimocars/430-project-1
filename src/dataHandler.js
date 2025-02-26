@@ -15,6 +15,7 @@ data.forEach((s) => {
 });
 
 function getHeaders(content) {
+  const a = Buffer.byteLength(JSON.stringify(content));
   return {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(JSON.stringify(content)),
@@ -77,21 +78,22 @@ function validateSenator(newSenator, state = undefined) {
   if (!newSenator.party || !newSenator.party.length) {
     return { code: 400, message: 'senator must have a party' };
   }
-  parties.add(newSenator.party.toLowerCase());
 
   if (!newSenator.congress_numbers || newSenator.congress_numbers.length !== 3) {
     return { code: 400, message: 'senator must belong to 3 congresses' };
   }
   if (!newSenator.person.name) {
     newSenator.person.name = `Sen. ${newSenator.person.firstname} ${newSenator.person.lastname}
-      [${newSenator.party[0]}-${newSenator.state}]`;
+    [${newSenator.party[0]}-${newSenator.state}]`;
   }
+  parties.add(newSenator.party.toLowerCase());
   return undefined;
 }
 
 function maybeSetName(senator) {
   try {
     let name = senator?.person?.name;
+    if (name) return name;
     if (!name) {
       name = `Sen. ${senator.person.firstname} ${senator.person.lastname} [${senator.party[0]}-${senator.state}]`;
       senator.person.name = name;
@@ -143,11 +145,7 @@ function addOrModifySenator(req, res) {
     // modify
     try {
       data[existingIndex] = req.body;
-      const responseObject = {
-        message: `Updated senator '${name}'`,
-      };
-      res.writeHead(201, getHeaders(responseObject));
-      res.write(JSON.stringify(responseObject));
+      res.writeHead(204, getHeaders({}));
       res.end();
     } catch (err) {
       console.log(`Error updating senator: ${err}`);
@@ -191,16 +189,18 @@ function updateSenatorsFromState(state, newSenatorsForState, res) {
         }
         senatorsToAdd.push(s);
       }
+      const stateAlreadyExists = states.has(state)
+      states.add(state);
       // remove current senators for the state
       data = data.filter((s) => s.state !== state);
 
       senatorsToAdd.forEach((s) => {
         data.push(s);
       });
-      const responseObject = {
-        message: `Updated senators for state ${state}`,
+      const responseObject = stateAlreadyExists ? {} : {
+        message: `Created senators for state ${state}`,
       };
-      res.writeHead(201, getHeaders(responseObject));
+      res.writeHead(stateAlreadyExists ? 204 : 201, getHeaders(responseObject));
       res.write(JSON.stringify(responseObject));
       res.end();
     }
@@ -224,8 +224,7 @@ function senatorEndpoint(req, res) {
     } = req.query;
     const senators = getSenator(firstName, lastName, party, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
-        getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -237,29 +236,35 @@ function senatorEndpoint(req, res) {
 }
 
 function stateEndpoint(req, res) {
-  const {
-    firstName, lastName, party, state,
-  } = req.query;
+  let { state } = req.query;
 
-  req.query.state = state.toUpperCase();
-  if (!states.has(state.toUpperCase())) {
+  if (!state) {
+    const responseObject = {
+      message: `State ${state} not specified`,
+    };
+    res.writeHead(400, getHeaders(responseObject));
+    if (req.method !== 'head') {
+      res.write(JSON.stringify(responseObject));
+    }
+    res.end();
+    return;
+  }
+  state = state.toUpperCase();
+  if (req.body) {
+    updateSenatorsFromState(state, req.body, res);
+  } else if (!states.has(state)) {
     const responseObject = {
       message: `State ${state} not found`,
     };
     res.writeHead(404, getHeaders(responseObject));
     if (req.method !== 'head') {
       res.write(JSON.stringify(responseObject));
+      res.end();
     }
-    res.end();
-  } else if (req.body) {
-    updateSenatorsFromState(req.query.state, req.body, res);
   } else {
-    // remove all other query parameters
-    req.query = { state: req.query.state };
-    const senators = getSenator(firstName, lastName, party, state);
+    const senators = getSenator(undefined, undefined, undefined, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
-        getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, undefined, state)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -271,9 +276,7 @@ function stateEndpoint(req, res) {
 }
 
 function partyEndpoint(req, res) {
-  const {
-    firstName, lastName, party, state,
-  } = req.query;
+  const { party } = req.query;
 
   if (!parties.has(party.toLowerCase())) {
     const responseObject = {
@@ -287,10 +290,9 @@ function partyEndpoint(req, res) {
   } else {
     // remove all other query parameters
     req.query = { party: req.query.party };
-    const senators = getSenator(firstName, lastName, party, state);
+    const senators = getSenator(undefined, undefined, party, undefined);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
-        getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, party, undefined)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -320,8 +322,7 @@ function contactEndpoint(req, res) {
     return contactInfo;
   });
   const responseObject = {
-    message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${
-      getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+    message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
     data: relevantData,
   };
   res.writeHead(200, getHeaders(responseObject));
@@ -336,7 +337,7 @@ function genderEndpoint(req, res) {
   const senatorToUpdate = data.find((s) => s.person.name === name);
   if (!senatorToUpdate) {
     const responseObject = {
-      message: `Senator ${name} not found`,
+      message: `Senator '${name}' not found`,
     };
     res.writeHead(404, getHeaders(responseObject));
     res.write(JSON.stringify(responseObject));
@@ -356,11 +357,7 @@ function genderEndpoint(req, res) {
   senatorToUpdate.person.gender = gender.toLowerCase();
   senatorToUpdate.person.gender_label = `${gender[0].toUpperCase()}${gender.slice(1).toLowerCase()};`;
 
-  const responseObject = {
-    message: `Updated gender of senator ${name} to ${gender}`,
-  };
-  res.writeHead(201, getHeaders(responseObject));
-  res.write(JSON.stringify(responseObject));
+  res.writeHead(204, getHeaders({}));
   res.end();
 }
 

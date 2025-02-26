@@ -20,6 +20,8 @@
       const byPartyButton = document.querySelector('#get-by-party');
       const contactButton = document.querySelector('#get-contact');
       const postSenatorButton = document.querySelector('#post-senator');
+      const postStateButton = document.querySelector('#post-state');
+      const postGenderButton = document.querySelector('#post-gender')
 
       const pres = document.querySelectorAll('pre');
       const buttons = document.querySelectorAll('button');
@@ -125,7 +127,7 @@
         const response = document.querySelector('#get-contact-response');
         response.innerHTML = responseString;
       })
-      
+
       postSenatorButton.addEventListener('click', async (e) => {
         const firstName = document.querySelector('#post-senator-firstName').value;
         const lastName = document.querySelector('#post-senator-lastName').value;
@@ -133,7 +135,7 @@
         const party = document.querySelector('#post-senator-party').value;
         const state = document.querySelector('#post-senator-state').value;
         const congressNumbers = document.querySelector('#post-senator-congress-numbers').value;
-        const method = document.querySelector('input[name="method-senator"]:checked').value;
+        const method = 'POST'
         const congress_numbers = congressNumbers.split(',');
 
         const url = `/senator`;
@@ -158,14 +160,102 @@
         })
         let responseString = '';
         responseString += `Status: ${fetchResponse.status}`;
-        if (method !== 'HEAD') {
+        if (method !== 'HEAD' && fetchResponse.status !== 204) {
           const json = await fetchResponse.json();
           responseString += `<br>Message: ${JSON.stringify(json.message)}`;
         }
         const response = document.querySelector('#post-senator-response');
         response.innerHTML = responseString;
       })
-      
+      postStateButton.addEventListener('click', async (e) => {
+        const state = document.querySelector('#post-state-state').value;
+
+        const firstName0 = document.querySelector('#post-state-firstName-0').value;
+        const lastName0 = document.querySelector('#post-state-lastName-0').value;
+        const name0 = document.querySelector('#post-state-name-0').value;
+        const party0 = document.querySelector('#post-state-party-0').value;
+        const congressNumbers0 = document.querySelector('#post-state-congress-numbers-0').value;
+        const congress_numbers0 = congressNumbers0.split(',');
+        const firstName1 = document.querySelector('#post-state-firstName-1').value;
+        const lastName1 = document.querySelector('#post-state-lastName-1').value;
+        const name1 = document.querySelector('#post-state-name-1').value;
+        const party1 = document.querySelector('#post-state-party-1').value;
+        const congressNumbers1 = document.querySelector('#post-state-congress-numbers-1').value;
+        const congress_numbers1 = congressNumbers1.split(',');
+
+        const method = 'POST'
+
+        const url = `/state?state=${state}`;
+        const body = [
+          {
+            person: {
+              firstname: firstName0,
+              lastname: lastName0,
+            },
+            state,
+            party: party0,
+            congress_numbers: congress_numbers0,
+          },
+          {
+            person: {
+              firstname: firstName1,
+              lastname: lastName1,
+            },
+            state,
+            party: party1,
+            congress_numbers: congress_numbers1,
+          },
+        ]
+        if (name0) body[0].person.name = name0;
+        if (name1) body[1].person.name = name1;
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD' && fetchResponse.status !== 204) {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+        }
+        const response = document.querySelector('#post-state-response');
+        response.innerHTML = responseString;
+      })
+      postGenderButton.addEventListener('click', async (e) => {
+        const name = document.querySelector('#post-gender-name').value;
+        const gender = document.querySelector('#post-gender-gender').value;
+        const method = 'POST'
+
+        const url = `/gender`;
+        const body = {
+          name,
+          gender,
+        }
+
+        const fetchResponse = await fetch(url, {
+          method: method,
+          headers: {
+            Accept: 'application/json',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
+        let responseString = '';
+        responseString += `Status: ${fetchResponse.status}`;
+        if (method !== 'HEAD' && fetchResponse.status !== 204) {
+          const json = await fetchResponse.json();
+          responseString += `<br>Message: ${JSON.stringify(json.message)}`;
+        }
+        const response = document.querySelector('#post-gender-response');
+        response.innerHTML = responseString;
+      })
+
+
     }
   </script>
 </head>
@@ -342,7 +432,7 @@
       <span class="method-descriptor">POST</span>
     </h2>
 
-    <div class="content">
+    <div class="content hidden">
       <div class="params">
         <div class="param">
           <label for="post-senator-firstName">first name</label>
@@ -370,13 +460,6 @@
         </div>
       </div>
 
-      <div class="method-selector">
-        <span class="method">
-          <label for="POST-senator">POST</label>
-          <input type="radio" id="POST-senator" name="method-senator" value="POST" checked />
-        </span>
-      </div>
-
       <button id="post-senator">Submit</button>
 
       <div class="response-container">
@@ -386,6 +469,107 @@
     </div>
   </div>
 
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/state</span>
+      <span class="method-descriptor">POST</span>
+    </h2>
+
+    <div class="content hidden">
+      <div class="params">
+        <div class="param">
+          <label for="post-state-state">state</label>
+          <input id="post-state-state" type="text" />
+        </div>
+
+        <!--Senator 0-->
+        <div>
+          <div class="param">
+            <label for="post-state-firstName-0">first name</label>
+            <input id="post-state-firstName-0" type="text" />
+          </div>
+          <div class="param">
+            <label for="post-state-lastName-0">last name</label>
+            <input id="post-state-lastName-0" type="text" />
+          </div>
+          <div class="param">
+            <label for="post-state-name-0">name (optional)</label>
+            <input id="post-state-name-0" type="text" />
+          </div>
+          <div class="param">
+            <label for="post-state-party-0">party</label>
+            <input id="post-state-party-0" type="text" />
+          </div>
+          <div class="param">
+            <label for="post-state-congress-numbers-0">congress numbers</label>
+            <input id="post-state-congress-numbers-0" type="text" />
+          </div>
+
+          <!--Senator 1-->
+          <div>
+            <div class="param">
+              <label for="post-state-firstName-1">first name</label>
+              <input id="post-state-firstName-1" type="text" />
+            </div>
+            <div class="param">
+              <label for="post-state-lastName-1">last name</label>
+              <input id="post-state-lastName-1" type="text" />
+            </div>
+            <div class="param">
+              <label for="post-state-name-1">name (optional)</label>
+              <input id="post-state-name-1" type="text" />
+            </div>
+            <div class="param">
+              <label for="post-state-party-1">party</label>
+              <input id="post-state-party-1" type="text" />
+            </div>
+            <div class="param">
+              <label for="post-state-congress-numbers-1">congress numbers</label>
+              <input id="post-state-congress-numbers-1" type="text" />
+            </div>
+          </div>
+
+        </div>
+
+        <button id="post-state">Submit</button>
+
+        <div class="response-container">
+          <h3>Response</h3>
+          <pre id="post-state-response"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="endpoint">
+    <h2>
+      <span class="api-path">/gender</span>
+      <span class="method-descriptor">POST</span>
+    </h2>
+
+    <div class="content hidden">
+      <div class="params">
+        <div class="param">
+          <label for="post-gender-name">name</label>
+          <input id="post-gender-name" type="text" />
+        </div>
+        <div class="param">
+          <label for="post-gender-gender">gender</label>
+          <input id="post-gender-gender" type="text" />
+        </div>
+      </div>
+
+      <button id="post-gender">Submit</button>
+
+      <div class="response-container">
+        <h3>Response</h3>
+        <pre id="post-gender-response"></pre>
+      </div>
+    </div>
+  </div>
+  <div class="link">
+    <a href="/docs">Documentation</a>
+  </div>
 </body>
 
 </html>
