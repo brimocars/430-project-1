@@ -15,10 +15,10 @@ data.forEach((s) => {
 });
 
 function getHeaders(content) {
-  const a = Buffer.byteLength(JSON.stringify(content));
+  const contentLength = Buffer.byteLength(JSON.stringify(content));
   return {
     'Content-Type': 'application/json',
-    'Content-Length': Buffer.byteLength(JSON.stringify(content)),
+    'Content-Length': contentLength > 2 ? contentLength : 0,
   };
 }
 
@@ -201,7 +201,9 @@ function updateSenatorsFromState(state, newSenatorsForState, res) {
         message: `Created senators for state ${state}`,
       };
       res.writeHead(stateAlreadyExists ? 204 : 201, getHeaders(responseObject));
-      res.write(JSON.stringify(responseObject));
+      if (stateAlreadyExists) {
+        res.write(JSON.stringify(responseObject));
+      }
       res.end();
     }
   } catch (err) {

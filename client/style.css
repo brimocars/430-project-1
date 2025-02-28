@@ -99,3 +99,7 @@ a:visited {
 a {
   color: #eeeeee
 }
+
+.left-div {
+  text-align: left;
+}
