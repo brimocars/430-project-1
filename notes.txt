@@ -44,7 +44,5 @@ POST gender
   update the gender and gender_label of a senator
 
 TODO:
-- above and beyond, whatever that may be
--- unit tests?
--- data persistance?
-- make sure things are commented sufficiently
+- unit tests
+- lint the unit tests

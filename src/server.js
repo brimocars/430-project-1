@@ -15,7 +15,7 @@ const parseQuery = (query) => {
     return {};
   }
   const queryObject = {};
-  // separate each query parameter 
+  // separate each query parameter
   const kvPairs = query.split('&');
   kvPairs.forEach((kvPair) => {
     // split each query parameter into its key and value, and add it to the object to return

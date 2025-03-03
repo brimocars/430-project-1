@@ -16,7 +16,7 @@ data.forEach((s) => {
 
 /**
  * Gets the required headers for every response
- * @param {Object} content The response body 
+ * @param {Object} content The response body
  * @returns {Object} The header object with Content-Type and Content-Length
  */
 function getHeaders(content) {
@@ -29,7 +29,7 @@ function getHeaders(content) {
 }
 
 /**
- * Gets a descriptive string to return in the message of a request based on the supplied query parameters 
+ * Gets a descriptive string to return in the message of a request based on the supplied query parameters
  * @param {String} firstName Senator's first name
  * @param {String} lastName Senator's last name
  * @param {String} party Senator's political party
@@ -107,7 +107,10 @@ function validateSenator(newSenator, state = undefined) {
     return { code: 400, message: 'senator must have a party' };
   }
 
-  if (!newSenator.congress_numbers || newSenator.congress_numbers.length !== 3) {
+  if (!newSenator.congress_numbers
+    || newSenator.congress_numbers.length !== 3
+    || !Array.isArray(newSenator.congress_numbers)
+    || newSenator.congress_numbers.some((num) => typeof num !== 'number')) {
     return { code: 400, message: 'senator must belong to 3 congresses' };
   }
   if (!newSenator.person.name) {
@@ -122,7 +125,7 @@ function validateSenator(newSenator, state = undefined) {
  * The name property on a senator is a combination of their first and last name, state, and party. Therefore, it can be
  * calculated if all of those are provided. This method calculates the senator's name if one was not provided
  * @param {Object} senator The senator
- * @returns 
+ * @returns
  */
 function maybeSetName(senator) {
   try {
@@ -410,4 +413,10 @@ module.exports = {
   partyEndpoint,
   contactEndpoint,
   genderEndpoint,
+  // for jest
+  getHeaders,
+  getResponseStringPartFromParams,
+  validateSenator,
+  maybeSetName,
+  getSenator,
 };
