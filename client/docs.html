@@ -8,6 +8,7 @@
   <script>
     window.onload = () => {
       const h2s = document.querySelectorAll('h2');
+      // make the h2s collapse and expand the endpoint divs when clicked
       h2s.forEach((h2) => {
         h2.addEventListener('click', (e) => {
           const content = h2.nextElementSibling;
@@ -548,7 +549,7 @@
 
       <div class="params">
         <h3>Returns</h3>
-        <div class="left-div">A 204 No Content</div>
+        <div class="left-div">204 No Content</div>
       </div>
 
       <div class="params">
@@ -584,54 +585,26 @@
       <div class="params">
         <h3>Body Parameters</h3>
         <div class="param">
-          <span>firstName (string) - A senator's first name</span>
+          <span>name (string) - The full name, including the title and party-state code, of the senator to update the
+            gender of</span>
         </div>
         <div class="param">
-          <span>lastName (string)- A senator's last name</span>
+          <span>gender (string) - The senator's new gender</span>
         </div>
-        <div class="param">
-          <span>name (string) (optional) - A senator's full name, including their title and party-state code. If not
-            provided, one will be generated based on the other parameters. If provided, it will be used to search for a
-            senator to update rather than create a new one.</span>
-        </div>
-        <div class="param">
-          <span>party (string) - A senator's party</span>
-        </div>
-        <div class="param">
-          <span>state (string) - A senator's state - must match the state in the query parameter</span>
-        </div>
-        <div class="param">
-          <span>congress_numbers (number[]) - The 3 congress numbers that a senator's term is for</span>
-        </div>
-        <div class="param">
-          <span>any (any) - Any additional data about this senator</span>
-        </div>
-      </div>
 
-      <div class="params">
-        <h3>Returns</h3>
-        <div class="left-div">A 204 No Content</div>
-      </div>
+        <div class="params">
+          <h3>Returns</h3>
+          <div class="left-div">204 No Content</div>
+        </div>
 
-      <div class="params">
-        <h3>Example</h3>
-        <div class="left-div">Request: /state [{
-          "person": {
-          "firstname": "1",
-          "lastname": "2"
-          },
-          "state": "MD",
-          "party": "some very real party",
-          "congress_numbers": [1,2,3]},
-          {
-          "person": {
-          "firstname": "1",
-          "lastname": "2"
-          },
-          "state": "Md",
-          "party": "some very real party",
-          "congress_numbers": [1,2,3]}]</div>
-        <div class="left-div">204</div>
+        <div class="params">
+          <h3>Example</h3>
+          <div class="left-div">Request: /gender
+            {"name": "Sen. John Thune [R-SD]",
+            "gender": "woman"}
+          </div>
+          <div class="left-div">204</div>
+        </div>
       </div>
     </div>
   </div>

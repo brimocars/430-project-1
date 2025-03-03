@@ -44,8 +44,6 @@ POST gender
   update the gender and gender_label of a senator
 
 TODO:
-- make documentation page
-- lint
 - above and beyond, whatever that may be
 -- unit tests?
 -- data persistance?

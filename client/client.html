@@ -8,6 +8,7 @@
   <script>
     window.onload = () => {
       const h2s = document.querySelectorAll('h2');
+      // make the h2s collapse and expand the endpoint divs when clicked
       h2s.forEach((h2) => {
         h2.addEventListener('click', (e) => {
           const content = h2.nextElementSibling;
@@ -23,6 +24,7 @@
       const postStateButton = document.querySelector('#post-state');
       const postGenderButton = document.querySelector('#post-gender')
 
+      // clear our other response divs when clicking any button
       const pres = document.querySelectorAll('pre');
       const buttons = document.querySelectorAll('button');
       buttons.forEach((button) => {
@@ -254,8 +256,6 @@
         const response = document.querySelector('#post-gender-response');
         response.innerHTML = responseString;
       })
-
-
     }
   </script>
 </head>

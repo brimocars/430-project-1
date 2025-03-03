@@ -14,14 +14,28 @@ data.forEach((s) => {
   parties.add(s.party.toLowerCase());
 });
 
+/**
+ * Gets the required headers for every response
+ * @param {Object} content The response body 
+ * @returns {Object} The header object with Content-Type and Content-Length
+ */
 function getHeaders(content) {
   const contentLength = Buffer.byteLength(JSON.stringify(content));
   return {
     'Content-Type': 'application/json',
+    // an empty object has a length of 2. This indicates a response without a body, so length should be 0.
     'Content-Length': contentLength > 2 ? contentLength : 0,
   };
 }
 
+/**
+ * Gets a descriptive string to return in the message of a request based on the supplied query parameters 
+ * @param {String} firstName Senator's first name
+ * @param {String} lastName Senator's last name
+ * @param {String} party Senator's political party
+ * @param {String} state Senator's state as a 2 character abbreviation
+ * @returns {String} the string to add to the response message
+ */
 function getResponseStringPartFromParams(firstName, lastName, party, state) {
   let response = '';
   if (firstName) {
@@ -39,11 +53,19 @@ function getResponseStringPartFromParams(firstName, lastName, party, state) {
   if (response.length) {
     response = ` with ${response}`;
   }
-  // remove final and
+  // remove final 'and'
   response = response.slice(0, response.length - 5);
   return response;
 }
 
+/**
+ * Gets senators that match query parameters
+ * @param {String} firstName Senator's first name
+ * @param {String} lastName Senator's last name
+ * @param {String} party Senator's political party
+ * @param {String} state Senator's state as a 2 character abbreviation
+ * @returns {Object[]} A list of senators that match the parameters
+ */
 function getSenator(firstName, lastName, party, state) {
   const senators = data
     .filter((senator) => utils.equalsIgnoreCase(senator.person.firstname, firstName))
@@ -53,6 +75,12 @@ function getSenator(firstName, lastName, party, state) {
   return senators;
 }
 
+/**
+ * Checks the required parameters for a senator. Some are added if they can be calculated, such as name
+ * @param {Object} newSenator The new senator to validate
+ * @param {String} state The senator's state as a 2 character abbreviation, only if this is a POST /state request
+ * @returns {Object} A validation error, or undefined if there is no error
+ */
 function validateSenator(newSenator, state = undefined) {
   if (!newSenator) {
     return { code: 400, message: 'Request missing body' };
@@ -90,6 +118,12 @@ function validateSenator(newSenator, state = undefined) {
   return undefined;
 }
 
+/**
+ * The name property on a senator is a combination of their first and last name, state, and party. Therefore, it can be
+ * calculated if all of those are provided. This method calculates the senator's name if one was not provided
+ * @param {Object} senator The senator
+ * @returns 
+ */
 function maybeSetName(senator) {
   try {
     let name = senator?.person?.name;
@@ -100,8 +134,8 @@ function maybeSetName(senator) {
       return name;
     }
   } catch (err) {
-    // don't care about this error because it means the senator doesn't exist yet and fail validation, which will be
-    // caught and dealt with later
+    // Don't care about this error because it means the senator doesn't exist yet and will fail validation, which will
+    // be caught and dealt with later. This is just here so we don't crash the server.
   }
   return undefined;
 }
@@ -145,6 +179,8 @@ function addOrModifySenator(req, res) {
     // modify
     try {
       data[existingIndex] = req.body;
+      // Personally, I think it's better practive to send a 200 with a message in the response body. However, the
+      // requirements say we must use a 204 header somewhere in the project.
       res.writeHead(204, getHeaders({}));
       res.end();
     } catch (err) {
@@ -189,9 +225,9 @@ function updateSenatorsFromState(state, newSenatorsForState, res) {
         }
         senatorsToAdd.push(s);
       }
-      const stateAlreadyExists = states.has(state)
+      const stateAlreadyExists = states.has(state);
       states.add(state);
-      // remove current senators for the state
+      // remove current senators for the state because there can only be 2
       data = data.filter((s) => s.state !== state);
 
       senatorsToAdd.forEach((s) => {
@@ -226,7 +262,8 @@ function senatorEndpoint(req, res) {
     } = req.query;
     const senators = getSenator(firstName, lastName, party, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+      message: `Found ${senators.length} ${senators.length === 1
+        ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -266,7 +303,8 @@ function stateEndpoint(req, res) {
   } else {
     const senators = getSenator(undefined, undefined, undefined, state);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, undefined, state)}`,
+      message: `Found ${senators.length} ${senators.length === 1
+        ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, undefined, state)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -294,7 +332,8 @@ function partyEndpoint(req, res) {
     req.query = { party: req.query.party };
     const senators = getSenator(undefined, undefined, party, undefined);
     const responseObject = {
-      message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, party, undefined)}`,
+      message: `Found ${senators.length} ${senators.length === 1
+        ? 'senator' : 'senators'}${getResponseStringPartFromParams(undefined, undefined, party, undefined)}`,
       data: senators,
     };
     res.writeHead(200, getHeaders(responseObject));
@@ -319,12 +358,14 @@ function contactEndpoint(req, res) {
       phone: s.phone,
       website: s.website,
     };
+    // remove undefined properties from contactInfo
     Object.keys(contactInfo)
       .forEach((key) => (contactInfo[key] === undefined ? () => { delete contactInfo[key]; } : () => { }));
     return contactInfo;
   });
   const responseObject = {
-    message: `Found ${senators.length} ${senators.length === 1 ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
+    message: `Found ${senators.length} ${senators.length === 1
+      ? 'senator' : 'senators'}${getResponseStringPartFromParams(firstName, lastName, party, state)}`,
     data: relevantData,
   };
   res.writeHead(200, getHeaders(responseObject));
