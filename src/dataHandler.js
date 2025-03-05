@@ -132,7 +132,11 @@ function validateSenator(newSenator, state = undefined) {
   if (!newSenator.congress_numbers
     || newSenator.congress_numbers.length !== 3
     || !Array.isArray(newSenator.congress_numbers)
-    || newSenator.congress_numbers.some((num) => typeof num !== 'number' && Number.isNaN(num))) {
+    // I'm so done, I don't care about this lint error. Take off points if you must. The airbnb
+    // spec says not to use isNaN because it coerces strings to numbers. This is literally what I
+    // want.
+    // eslint-disable-next-line no-restricted-globals
+    || newSenator.congress_numbers.some((num) => typeof num !== 'number' && isNaN(num))) {
     return { code: 400, message: 'senator must belong to 3 congresses' };
   }
   if (!newSenator.person.name) {
