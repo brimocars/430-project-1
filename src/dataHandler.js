@@ -132,7 +132,7 @@ function validateSenator(newSenator, state = undefined) {
   if (!newSenator.congress_numbers
     || newSenator.congress_numbers.length !== 3
     || !Array.isArray(newSenator.congress_numbers)
-    || newSenator.congress_numbers.some((num) => typeof num !== 'number')) {
+    || newSenator.congress_numbers.some((num) => typeof num !== 'number' && Number.isNaN(num))) {
     return { code: 400, message: 'senator must belong to 3 congresses' };
   }
   if (!newSenator.person.name) {
