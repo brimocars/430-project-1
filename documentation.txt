@@ -1,0 +1,43 @@
+The dataset I'm using is from https://www.govtrack.us/api/v2/role?current=true&role_type=senator
+It has information about current US senators.
+
+What went right:
+- The unit tests for my above and beyond went well. I have a history of being really bad at jest and having things break a lot. I suppose this is a much simpler project.
+- The core api was quick and easy to set up - It only took 4 days, according to the git history.
+
+What went wrong:
+- The default airbnb eslint spec has some dumb rules. I hate not being able to modify this at all and not being able to disable rules for specific lines when it makes sense. The point of a linter is to make code more readable and maintainable, and the inability to disable rules when applicable is counterproductive to this goal.
+- This project felt like it took way too long. I don't know if it's just a skill issue or if this project should be changed in some way, but either way, I didn't have fun.
+- My frontend isn't very pretty, but I'm nearly out of time, and extremely out of motivation to make it better.
+- My data was somewhat messy. I think it would have been better if I removed a lot of the extra properties that were always null or undefined or the same for every senator.
+- I wasn't able to properly test all of my POST endpoints with form data. I couldn't figure out a way to send nested objects in form data.
+
+What I learned:
+- Express is so good. I've used express a lot at work, and the amount of boilerplate it saves is astounding. Having this express-less project allowed me to see just how much it simplifies things.
+- I realived I kinda hate frontend. Or, at the very least, I hate making an ugly frontend with vanilla html.
+- I miss swagger (or any tool that helps with writing api docs)
+- github actions are neat
+- Form data are just query params in the body
+
+What I did to go above and beyond:
+- I added jest tests for a bunch of the helper methods. It's not as useful as it would be with express and an MVC pattern, but I still caught quite a few bugs with it.
+- I would have liked to do more, but I really want to stop thinking about this project.
+
+I used quite a bit of borrowed code:
+.eslintrc 
+It's from previous assignments. It sets rules for eslint. It's in the root folder of the project.
+
+.gitignore
+It's from previous assignments. It tells git what to put and not put in the repo. It's in the root folder of the project.
+
+All the boilerplate stuff in ./src/server.js
+It's from previous assignments. It sets up the server. I specifically mean lines 1, 6, 167-169, and 73-76.
+
+A thing to parse the body of a request
+It's from the demo in class, but modified slightly to suit my needs. It parses the body of a request. It's at lines 28-71 of ./src/server.js
+
+clientHandler.js in the client folder
+It's from previous assignments. It handles requests for index.html and style.css. I added my own method to handle the docs page.
+
+main.yml
+It's from previous assignments. It does the github action stuff. It's at ./.github/workflows/main.yml.

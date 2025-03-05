@@ -1,15 +1,17 @@
-// Borrowed from HTTP-API-Assignment-ii
+// Borrowed from HTTP-API-Assignment-ii, with some changes
 {
   "extends": "airbnb/base",
   "rules": {
     "no-underscore-dangle": "off",
     "no-plusplus": "off",
-    "import/extensions": "off",
-    "max-len": ["error", { "code": 120 }],
-    "no-console": "off",
-    "no-param-reassign": "off"
+    "import/extensions": "off"
   },
+  // I don't care if I lose points for this, optional chaining is too useful. 
   "parserOptions": {
     "ecmaVersion": 2020
+  },
+  // For above and beyond work
+  "env": {
+    "jest": true
   }
 }

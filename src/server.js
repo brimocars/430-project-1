@@ -28,13 +28,15 @@ const parseQuery = (query) => {
 /**
  * Parse the request body and put it in an object
  * @param {Object} request the node http req object
- * @param {Boolean} isJson Whether the content type of the request is json or not. Form data is also supported.
+ * @param {Boolean} isJson Whether the content type of the request is json or not. Form data is
+ * also supported.
  * @returns {Promise<Object>} The body of the request
  */
 const parseBody = (request, isJson) => {
   // taken and modififed from the in-class demo
   if (request.method?.toUpperCase() !== 'POST') {
-    // only get and post requests are supported, and, according to http standards, gets cannot have bodies.
+    // only get and post requests are supported, and, according to http standards, gets cannot have
+    // bodies.
     return undefined;
   }
 

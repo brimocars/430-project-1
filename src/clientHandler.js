@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const index = fs.readFileSync('./client/client.html');
 const style = fs.readFileSync('./client/style.css');
+const docs = fs.readFileSync('./client/docs.html');
 
 function getIndex(res) {
   res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -17,7 +18,6 @@ function getStyle(res) {
 }
 
 function getDocs(res) {
-  const docs = fs.readFileSync('./client/docs.html');
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write(docs);
   res.end();
