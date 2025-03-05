@@ -136,7 +136,7 @@ function validateSenator(newSenator, state = undefined) {
     // spec says not to use isNaN because it coerces strings to numbers. This is literally what I
     // want.
     // eslint-disable-next-line no-restricted-globals
-    || newSenator.congress_numbers.some((num) => typeof num !== 'number' && isNaN(num))) {
+    || newSenator.congress_numbers.some((num) => num.length === 0 || (typeof num !== 'number' && isNaN(num)))) {
     return { code: 400, message: 'senator must belong to 3 congresses' };
   }
   if (!newSenator.person.name) {
